@@ -1,1 +1,2 @@
 # schoolProj
+Some blog
