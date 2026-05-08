@@ -1,7 +1,8 @@
 ﻿const SUPABASE_URL = 'https://wqhxhqfwiosknpmkjafh.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_9MhHI-O3erMnrEj2Dbi48Q_iStTg3Nm';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaHhocWZ3aW9za25wbWtqYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDY5OTQsImV4cCI6MjA5MzcyMjk5NH0.OvHhdKzWQyw0LaBd8u3XedRRPQMwdysu0tkdy69jVfQ';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 当前状态
 let currentUser = null;
