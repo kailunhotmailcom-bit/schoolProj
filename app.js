@@ -1,6 +1,6 @@
-﻿// Supabase 配置 - ⚠️ 使用你的项目信息替换
+﻿// Supabase 配置
 const SUPABASE_URL = 'https://wqhxhqfwiosknpmkjafh.supabase.co';
-const SUPABASE_ANON_KEY = '22515dc8-e08a-49be-8e94-5855062ef2b1';
+const SUPABASE_ANON_KEY = 'sb_publishable_9MhHI-O3erMnrEj2Dbi48Q_iStTg3Nm';
 // 初始化 Supabase 客户端
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
