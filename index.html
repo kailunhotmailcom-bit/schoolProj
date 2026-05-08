@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog - Welcome</title>
+    <title>My Blog - Personal Blog Platform</title>
     <style>
         * {
             margin: 0;
@@ -15,19 +15,27 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
+            background: #f5f5f5;
         }
 
+        /* Header */
         header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        nav {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+        }
+
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -35,24 +43,43 @@
 
         nav h1 {
             font-size: 1.8rem;
+            cursor: pointer;
         }
 
-        nav ul {
-            list-style: none;
+        .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
+            align-items: center;
         }
 
-        nav a {
+        .nav-links a, .nav-links button {
             color: white;
             text-decoration: none;
-            transition: opacity 0.3s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
         }
 
-        nav a:hover {
-            opacity: 0.8;
+        .nav-links a:hover, .nav-links button:hover {
+            background: rgba(255,255,255,0.2);
         }
 
+        #userInfo {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #userEmail {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -68,24 +95,56 @@
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
+            opacity: 0.9;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border: 2px solid white;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 1rem;
+            background: transparent;
         }
 
-        .posts-section {
+        .btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        .section {
             padding: 3rem 0;
         }
 
-        .posts-section h2 {
+        .section h2 {
             font-size: 2rem;
             margin-bottom: 2rem;
             text-align: center;
+            color: #333;
         }
 
+        /* Posts Grid */
         .blog-posts {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -94,15 +153,16 @@
 
         .blog-post {
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
 
         .blog-post:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
         .post-image {
@@ -131,22 +191,192 @@
             margin-bottom: 1rem;
         }
 
-        .post-content p {
+        .post-excerpt {
+            color: #555;
             margin-bottom: 1rem;
         }
 
-        .read-more {
-            display: inline-block;
+        /* Modal / Overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 2rem;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
             color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
         }
 
-        .read-more:hover {
-            color: #764ba2;
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
         }
 
+        .close:hover {
+            color: #333;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.3s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .btn-cancel {
+            background: #ddd;
+            color: #333;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message-error {
+            background: #ffe6e6;
+            color: #cc0000;
+            border: 1px solid #ffcccc;
+        }
+
+        .message-success {
+            background: #e6ffe6;
+            color: #006600;
+            border: 1px solid #ccffcc;
+        }
+
+        /* Post Detail */
+        #postDetail {
+            display: none;
+        }
+
+        .post-detail-header {
+            margin-bottom: 2rem;
+        }
+
+        .post-detail-header h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-detail-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Comments */
+        .comments-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comment {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .comment-meta {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-content {
+            color: #333;
+        }
+
+        .no-comments {
+            text-align: center;
+            color: #999;
+            padding: 2rem;
+        }
+
+        /* Footer */
         footer {
             background: #333;
             color: white;
@@ -155,76 +385,149 @@
             margin-top: 3rem;
         }
 
-        footer p {
-            margin-bottom: 0.5rem;
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 0.5rem;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .blog-posts {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <nav class="container">
-            <h1>📝 My Blog</h1>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+            <h1 onclick="showHome()">📝 My Blog</h1>
+            <div class="nav-links">
+                <a href="#" onclick="showHome()">Home</a>
+                <div id="authButtons">
+                    <button onclick="showLoginModal()">Login</button>
+                    <button onclick="showRegisterModal()">Register</button>
+                </div>
+                <div id="userInfo">
+                    <span id="userEmail"></span>
+                    <button onclick="showCreatePostModal()">New Post</button>
+                    <button onclick="logout()">Logout</button>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <section class="hero">
+    <!-- Hero Section -->
+    <section class="hero" id="heroSection">
         <h2>Welcome to My Blog</h2>
-        <p>Sharing thoughts, ideas, and stories</p>
+        <p>Share your thoughts, ideas, and stories with the world</p>
+        <button class="btn" onclick="showRegisterModal()">Get Started</button>
     </section>
 
-    <main class="container">
-        <section class="posts-section">
-            <h2>Latest Posts</h2>
-            <div class="blog-posts">
-                <article class="blog-post">
-                    <div class="post-image">📖</div>
-                    <div class="post-content">
-                        <h3>Getting Started with Web Development</h3>
-                        <div class="post-meta">Posted on April 25, 2026</div>
-                        <p>Learn the basics of HTML, CSS, and JavaScript to start your web development journey...</p>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="blog-post">
-                    <div class="post-image">💻</div>
-                    <div class="post-content">
-                        <h3>Best Practices for Clean Code</h3>
-                        <div class="post-meta">Posted on April 20, 2026</div>
-                        <p>Discover essential tips for writing maintainable and efficient code that scales well...</p>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="blog-post">
-                    <div class="post-image">🚀</div>
-                    <div class="post-content">
-                        <h3>Deploying Your First Web App</h3>
-                        <div class="post-meta">Posted on April 15, 2026</div>
-                        <p>Step-by-step guide to deploying your web application to production...</p>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-            </div>
-        </section>
+    <!-- Posts Section -->
+    <main class="container section" id="postsSection">
+        <h2>Latest Posts</h2>
+        <div id="postsContainer" class="blog-posts">
+            <div class="loading">Loading posts...</div>
+        </div>
     </main>
+
+    <!-- Post Detail Section -->
+    <main class="container section" id="postDetail">
+        <button class="btn btn-small" onclick="showHome()" style="margin-bottom:1rem;">← Back to Posts</button>
+        <div class="post-detail-header">
+            <h2 id="detailTitle"></h2>
+            <div class="post-meta" id="detailMeta"></div>
+        </div>
+        <div class="post-detail-content" id="detailContent"></div>
+        
+        <!-- Comments -->
+        <div class="comments-section">
+            <h3>Comments</h3>
+            <div id="commentsContainer"></div>
+            <div id="commentForm" class="form-group" style="margin-top:1rem; display:none;">
+                <textarea id="commentInput" placeholder="Write a comment..." rows="3"></textarea>
+                <button class="btn-submit" onclick="submitComment()" style="margin-top:0.5rem;">Post Comment</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <div id="loginMessage" class="message"></div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter password">
+            </div>
+            <button class="btn-submit" onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Create Account</h2>
+            <div id="registerMessage" class="message"></div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="registerEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="registerPassword" placeholder="Choose a password">
+            </div>
+            <button class="btn-submit" onclick="register()">Register</button>
+        </div>
+    </div>
+
+    <!-- Create/Edit Post Modal -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('postModal')">&times;</span>
+            <h2 id="postModalTitle">Create New Post</h2>
+            <div id="postMessage" class="message"></div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="postTitle" placeholder="Enter post title">
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea id="postContent" placeholder="Write your post content here..."></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="closeModal('postModal')">Cancel</button>
+                <button class="btn-submit" onclick="submitPost()">Publish Post</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2026 My Blog. All rights reserved.</p>
-        <p>Created using HTML & CSS</p>
+        <p>Built with ❤️ using Supabase</p>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      // 初始化 Supabase（用你的项目信息替换）
-      const supabase = window.supabase.createClient(
-        'https://wqhxhqfwiosknpmkjafh.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaHhocWZ3aW9za25wbWtqYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDY5OTQsImV4cCI6MjA5MzcyMjk5NH0.OvHhdKzWQyw0LaBd8u3XedRRPQMwdysu0tkdy69jVfQ'
-      );
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
