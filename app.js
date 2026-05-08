@@ -1,5 +1,4 @@
-﻿// Supabase配置
-const SUPABASE_URL = 'https://wqhxhqfwiosknpmkjafh.supabase.co';
+﻿const SUPABASE_URL = 'https://wqhxhqfwiosknpmkjafh.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_9MhHI-O3erMnrEj2Dbi48Q_iStTg3Nm';
 // 初始化 Supabase 客户端
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
