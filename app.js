@@ -96,7 +96,7 @@ async function loadPosts() {
     const container = document.getElementById('postsContainer');
     container.innerHTML = '<div class="loading">Loading posts...</div>';
 
-    const { data: posts, error } = await supabase
+    const { data: posts, error } = await supabaseClient
         .from('posts')
         .select('*')
         .order('created_at', { ascending: false });
@@ -127,7 +127,7 @@ async function loadPosts() {
 }
 
 async function viewPost(postId) {
-    const { data: post, error } = await supabase
+    const { data: post, error } = await supabaseClient
         .from('posts')
         .select('*')
         .eq('id', postId)
@@ -168,7 +168,7 @@ async function submitPost() {
 
     const excerpt = content.substring(0, 150);
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('posts')
         .insert([
             {
@@ -195,7 +195,7 @@ async function loadComments(postId) {
     const container = document.getElementById('commentsContainer');
     container.innerHTML = '<div class="loading">Loading comments...</div>';
 
-    const { data: comments, error } = await supabase
+    const { data: comments, error } = await supabaseClient
         .from('comments')
         .select('*')
         .eq('post_id', postId)
@@ -229,7 +229,7 @@ async function submitComment() {
         return;
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('comments')
         .insert([
             {
