@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ============ 认证功能 ============
 async function checkUser() {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
         currentUser = user;
         document.getElementById('authButtons').style.display = 'none';
@@ -40,7 +40,7 @@ async function register() {
         return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
     });
@@ -66,7 +66,7 @@ async function login() {
         return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
         password,
     });
@@ -82,7 +82,7 @@ async function login() {
 }
 
 async function logout() {
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
     currentUser = null;
     document.getElementById('authButtons').style.display = 'flex';
     document.getElementById('userInfo').style.display = 'none';
