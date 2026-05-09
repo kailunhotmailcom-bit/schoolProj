@@ -6,6 +6,8 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 // 当前状态
 let currentUser = null;
 let currentPostId = null;
+let currentPostData = null;
+let isEditing = false;
 
 // ============ 页面加载 ============
 document.addEventListener('DOMContentLoaded', () => {
@@ -139,12 +141,20 @@ async function viewPost(postId) {
     }
 
     currentPostId = postId;
+    currentPostData = post;
     document.getElementById('postsSection').classList.add('hidden');
     document.getElementById('heroSection').classList.add('hidden');
     document.getElementById('postDetail').style.display = 'block';
     document.getElementById('detailTitle').textContent = post.title;
     document.getElementById('detailMeta').textContent = `Posted on ${new Date(post.created_at).toLocaleDateString()}`;
     document.getElementById('detailContent').innerHTML = post.content.replace(/\n/g, '<br>');
+
+    const actionsDiv = document.getElementById('postActions');
+    if (currentUser && currentUser.id === post.user_id) {
+        actionsDiv.style.display = 'flex';
+    } else {
+        actionsDiv.style.display = 'none';
+    }
 
     loadComments(postId);
 
@@ -270,8 +280,82 @@ function showCreatePostModal() {
         alert('Please login first');
         return;
     }
+    isEditing = false;
     document.getElementById('postModalTitle').textContent = 'Create New Post';
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postContent').value = '';
     document.getElementById('postModal').style.display = 'block';
+}
+
+function prepareEditPost() {
+    isEditing = true;
+    document.getElementById('postModalTitle').textContent = 'Edit Post';
+    document.getElementById('postTitle').value = currentPostData.title;
+    document.getElementById('postContent').value = currentPostData.content;
+    document.getElementById('postModal').style.display = 'block';
+}
+
+async function submitPost() {
+    const title = document.getElementById('postTitle').value;
+    const content = document.getElementById('postContent').value;
+    const messageEl = document.getElementById('postMessage');
+
+    if (!title || !content) {
+        showMessage(messageEl, 'Please fill in all fields', 'error');
+        return;
+    }
+
+    const excerpt = content.substring(0, 150);
+    let error;
+
+    if (isEditing) {
+        // 如果是编辑模式，执行更新 (Update)
+        const { error: updateError } = await supabaseClient
+            .from('posts')
+            .update({ title, content, excerpt })
+            .eq('id', currentPostId);
+        error = updateError;
+    } else {
+        // 否则执行插入 (Insert)
+        const { error: insertError } = await supabaseClient
+            .from('posts')
+            .insert([{ title, content, excerpt, user_id: currentUser.id }]);
+        error = insertError;
+    }
+
+    if (error) {
+        showMessage(messageEl, 'Error: ' + error.message, 'error');
+    } else {
+        closeModal('postModal');
+        // 如果是编辑后保存，则重新加载当前文章以显示最新内容；如果是新建，则回首页
+        if (isEditing) {
+            viewPost(currentPostId); 
+        } else {
+            showHome();
+        }
+        loadPosts(); // 刷新列表
+    }
+}
+
+// 删除文章
+async function deletePost() {
+    // 增加一个浏览器的二次确认弹窗，防止误删
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from('posts')
+        .delete()
+        .eq('id', currentPostId);
+
+    if (error) {
+        alert('Error deleting post: ' + error.message);
+    } else {
+        alert('Post deleted successfully!');
+        loadPosts(); // 刷新文章列表
+        showHome();  // 返回首页
+    }
 }
 
 function closeModal(modalId) {
