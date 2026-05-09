@@ -451,6 +451,11 @@
         <div class="post-detail-header">
             <h2 id="detailTitle"></h2>
             <div class="post-meta" id="detailMeta"></div>
+
+            <div id="postActions" style="display: none; margin-top: 1rem; gap: 1rem;">
+                <button class="btn btn-small btn-primary" onclick="prepareEditPost()">Edit Post</button>
+                <button class="btn btn-small" style="color: #cc0000; border-color: #cc0000;" onclick="deletePost()">Delete Post</button>
+            </div>
         </div>
         <div class="post-detail-content" id="detailContent"></div>
         
